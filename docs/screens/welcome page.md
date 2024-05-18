@@ -13,7 +13,7 @@ Viene chiesto all'utente di inserire il numero di sigarette fumate negli ultimi 
 
 ### Domande:
 1. Quanti sigarette hai fumato negli ultimi 15 giorni? (Risposta aperta per inserire il numero di sigarette fumate al giorno)
-2. Quali sono le situazioni o le emozioni che scatenano il desiderio di fumare? (Opzionale, elenco delle situazioni o emozioni che scatenano il desiderio di fumare)
+2. Quali sono le situazioni o le emozioni che scatenano il desiderio di fumare? (Esempi: stress durante lavoro/studio, momenti di noia, ansia, ecc.)
 3. Hai un supporto sociale o familiare nel tuo percorso per smettere di fumare? (Opzionale, domanda sul supporto sociale)
 4. Seleziona le tue preferenze di supporto durante il percorso per smettere di fumare:
     - Consigli pratici
@@ -66,7 +66,7 @@ Users are asked to input the number of cigarettes smoked in the last 15 days, id
 
 ### Questions:
 1. How many cigarettes have you smoked in the last 15 days? (Open-ended answer to input the number of cigarettes smoked per day)
-2. What are the situations or emotions that trigger the desire to smoke? (Optional, list of situations or emotions triggering the desire to smoke)
+2. What are the situations or emotions that trigger the desire to smoke? (Examples: stress during work/study, moments of boredom, anxiety, etc.)
 3. Do you have social or familial support in your journey to quit smoking? (Optional, question about social support)
 4. Select your support preferences during the quit smoking journey:
     - Practical advice
