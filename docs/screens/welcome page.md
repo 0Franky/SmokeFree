@@ -47,6 +47,8 @@ Viene chiesto all'utente di inserire il numero di sigarette fumate negli ultimi 
 ### Invito all'Azione:
 - La pagina invita gli utenti a prendere il controllo della loro salute e del loro futuro, fornendo loro un punto di partenza chiaro e incoraggiandoli ad iniziare il loro percorso per smettere di fumare.
 
+~~~~~~~~~~~~~~~~~~~~~
+
 =================
 
 # Welcome Page of "SmokeFree" App - [ENG]
@@ -73,6 +75,8 @@ Users are asked to input the number of cigarettes smoked in the last 15 days, id
 5. Would you like to receive notifications for support during your quit smoking journey?
     - Toggle switch to enable or disable notifications, with a brief explanation of the implications of this choice.
 
+~~~~~~~~~~~~~~~~~~~~~
+
 ## Summary:
 
 ### Engaging Introduction:
@@ -95,3 +99,5 @@ Users are asked to input the number of cigarettes smoked in the last 15 days, id
 
 ### Call to Action:
 - The page encourages users to take control of their health and future by providing a clear starting point and encouraging them to begin their journey to quit smoking.
+
+~~~~~~~~~~~~~~~~~~~~~
