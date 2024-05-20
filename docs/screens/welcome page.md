@@ -1,4 +1,4 @@
-# Pagina di Benvenuto dell'App "SmokeFree" - [ITA]
+# Pagina di Benvenuto e Configurazione Iniziale dell'App "SmokeFree" - [ITA]
 
 La pagina di benvenuto dell'app "SmokeFree" accoglie gli utenti con un'interfaccia pulita e accattivante divisa in step.
 
@@ -21,6 +21,9 @@ Viene chiesto all'utente di inserire il numero di sigarette fumate negli ultimi 
     - Monitoraggio del progresso
 5. Vorresti ricevere notifiche per il supporto durante il tuo percorso per smettere di fumare?
     - Toggle switch per attivare o disattivare le notifiche, con una breve spiegazione sulle implicazioni di questa scelta.
+
+## Step 3: Riepilogo
+Mostra i risultati del questionario iniziale compilato dagli utenti, inclusi i dati sulle loro abitudini di fumo e i loro obiettivi nel smettere di fumare.
 
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -51,7 +54,7 @@ Viene chiesto all'utente di inserire il numero di sigarette fumate negli ultimi 
 
 =================
 
-# Welcome Page of "SmokeFree" App - [ENG]
+# Welcome Page and Initial Configuration of "SmokeFree" App - [ENG]
 
 The welcome page of the "SmokeFree" app greets users with a clean and engaging interface divided into steps.
 
@@ -74,6 +77,9 @@ Users are asked to input the number of cigarettes smoked in the last 15 days, id
     - Progress monitoring
 5. Would you like to receive notifications for support during your quit smoking journey?
     - Toggle switch to enable or disable notifications, with a brief explanation of the implications of this choice.
+
+## Step 3: Summary
+Displays the results of the initial questionnaire completed by users, including data on their smoking habits and their goals in quitting smoking.
 
 ~~~~~~~~~~~~~~~~~~~~~
 
