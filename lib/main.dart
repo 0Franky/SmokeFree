@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:smoke_free/screens/WelcomePage/WelcomePage.dart';
 
 void main() {
+  prepareApp();
   runApp(const MyApp());
+}
+
+void prepareApp() {
+  WidgetsFlutterBinding.ensureInitialized();
 }
 
 class MyApp extends StatelessWidget {
