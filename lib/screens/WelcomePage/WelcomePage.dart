@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smoke_free/consts/values.dart';
+import 'package:smoke_free/consts/durations.dart';
 import 'package:smoke_free/screens/WelcomePage/slides/InitialSetupPage.dart';
 import 'package:smoke_free/screens/WelcomePage/slides/IntroPage.dart';
 // import 'package:smoke_free/screens/WelcomePage/slides/SummaryPage.dart';
@@ -45,7 +45,7 @@ class _WelcomePageState extends State<WelcomePage> {
           opacity: _currentPage == 0 ? 0 : 1,
           duration: ANIMATION_DURATION_MEDIUM,
           child: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: Icon(Icons.arrow_back_ios_new_rounded),
             onPressed: () {
               if (_currentPage > 0) {
                 _pageController.previousPage(

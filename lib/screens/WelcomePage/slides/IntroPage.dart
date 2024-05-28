@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smoke_free/consts/values.dart';
+import 'package:smoke_free/consts/durations.dart';
 
 Widget buildIntroPage(final PageController pageController) {
   return Padding(

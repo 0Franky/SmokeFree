@@ -1,16 +1,18 @@
 import 'package:smoke_free/models/store_data/GenericStoreData.dart';
 
 class MainInformation extends Genericstoredata {
-  int averageCigarettesPerDay;
-  int currentMaxCigarettesPerDay;
+  final String userAlias;
+  final int averageCigarettesPerDay;
+  final int currentMaxCigarettesPerDay;
 
-  List<String>
+  final List<String>
       smokingTriggers; // List of triggers (e.g.: stress, boredom, anxiety)
 
   final Timeline timeline;
   final Support? support;
 
   MainInformation({
+    required this.userAlias,
     required this.averageCigarettesPerDay,
     required this.currentMaxCigarettesPerDay,
     required this.smokingTriggers,
@@ -22,6 +24,7 @@ class MainInformation extends Genericstoredata {
 
   @override
   Map<String, dynamic> toJson() => {
+        'userAlias': userAlias,
         'averageCigarettesPerDay': averageCigarettesPerDay,
         'currentMaxCigarettesPerDay': currentMaxCigarettesPerDay,
         'smokingTriggers': smokingTriggers,
@@ -31,6 +34,7 @@ class MainInformation extends Genericstoredata {
 
   @override
   static MainInformation fromJson(Map<String, dynamic> data) => MainInformation(
+        userAlias: data['averageCigarettesPerDay'] as String,
         averageCigarettesPerDay: data['averageCigarettesPerDay'] as int,
         currentMaxCigarettesPerDay: data['currentMaxCigarettesPerDay'] as int,
         smokingTriggers: data['smokingTriggers'] as List<String>,
@@ -42,8 +46,8 @@ class MainInformation extends Genericstoredata {
 }
 
 class Support extends Genericstoredata {
-  String alias;
-  String
+  final String alias;
+  final String
       supportContact; // List of support types (e.g.: friend's phone number, therapist)
 
   Support({
@@ -63,8 +67,8 @@ class Support extends Genericstoredata {
 }
 
 class Timeline extends Genericstoredata {
-  DateTime startDateQuitting;
-  int desiredDays; // Desired time in days to quit smoking
+  final DateTime startDateQuitting;
+  final int desiredDays; // Desired time in days to quit smoking
 
   Timeline({
     required this.startDateQuitting,

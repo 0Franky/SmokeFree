@@ -34,3 +34,15 @@ class Goal extends Genericstoredata {
         achieved: data['achieved'] as bool?,
       );
 }
+
+class MaxDailyCigarettesGoal extends Goal {
+  // Maximum number of cigarettes per day from start of goal to the end
+  final int maxCigarettes;
+
+  MaxDailyCigarettesGoal({
+    required this.maxCigarettes,
+    required super.description,
+    required super.startDate,
+    required super.attainmentDate,
+  });
+}

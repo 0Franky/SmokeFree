@@ -2,22 +2,20 @@ import 'package:localstore/localstore.dart';
 import 'package:smoke_free/models/store_data/GenericStoreData.dart';
 
 class UserStorage {
-  final db = Localstore.instance;
+  static final _db = Localstore.instance;
 
-  Future<void> save<T extends Genericstoredata>(
-    String collection,
+  static Future<void> save<T extends Genericstoredata>(
     String id,
     T data,
   ) async {
-    await db.collection(collection).doc(id).set(data.toJson());
+    await _db.collection('smoke_free_data').doc(id).set(data.toJson());
   }
 
-  Future<T?> loadUserData<T extends Genericstoredata>(
-    String collection,
+  static Future<T?> loadUserData<T extends Genericstoredata>(
     String id,
     T Function(Map<String, dynamic>) fromJson,
   ) async {
-    final data = await db.collection(collection).doc(id).get();
+    final data = await _db.collection('smoke_free_data').doc(id).get();
     if (data != null) {
       return fromJson(data);
     } else {
@@ -25,3 +23,6 @@ class UserStorage {
     }
   }
 }
+
+String MAIN_INFORMATION_ENTRY = "mainInformation";
+String PREFERENCES_ENTRY = "preferences";

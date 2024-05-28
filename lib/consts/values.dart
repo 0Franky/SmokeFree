@@ -1,2 +1,1 @@
-final Duration ANIMATION_DURATION_MEDIUM = Duration(milliseconds: 500);
-final Duration ANIMATION_DURATION_SHORT = Duration(milliseconds: 500);
+final double WEEKLY_REDUCTION_PERCENTAGE = 0.4;

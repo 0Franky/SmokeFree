@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smoke_free/models/store_data/MainInformation.dart';
 import 'package:smoke_free/models/store_data/Preferences.dart';
+import 'package:smoke_free/repos/UserStorage.dart';
+import 'package:smoke_free/utils/smoke_calculator.dart';
 
 class InitialSetupPage extends StatefulWidget {
   final PageController pageController;
@@ -15,24 +17,46 @@ class InitialSetupPage extends StatefulWidget {
 }
 
 class _InitialSetupPageState extends State<InitialSetupPage> {
-  final TextEditingController averageCigarettesController = TextEditingController();
+  final TextEditingController userAliasController = TextEditingController();
+  final TextEditingController averageCigarettesController =
+      TextEditingController();
   final TextEditingController desiredDaysController = TextEditingController();
-  final TextEditingController smokingTriggersController = TextEditingController();
+  final TextEditingController customTriggerController = TextEditingController();
   final TextEditingController aliasController = TextEditingController();
   final TextEditingController supportValueController = TextEditingController();
-  final TextEditingController notificationFrequencyController = TextEditingController();
+  final TextEditingController notificationFrequencyController =
+      TextEditingController(text: "7");
 
   bool socialSupportAvailable = false;
   bool notificationsEnabled = false;
   String? selectedSupportType;
+  String? selectedTrigger;
+  List<String> smokingTriggers = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    averageCigarettesController.addListener(() {
+      int? averageCigarettesNumber =
+          int.tryParse(averageCigarettesController.text);
+      if (averageCigarettesNumber != null) {
+        desiredDaysController.text =
+            calcucateTotalTimeToQuit(averageCigarettesNumber).toString();
+      }
+    });
+  }
 
   void saveData() {
     final mainInformation = MainInformation(
-      averageCigarettesPerDay: int.tryParse(averageCigarettesController.text) ?? 0,
+      userAlias: userAliasController.text,
+      averageCigarettesPerDay:
+          int.tryParse(averageCigarettesController.text) ?? 0,
       currentMaxCigarettesPerDay: 0,
-      smokingTriggers: smokingTriggersController.text.split(',').map((e) => e.trim()).toList(),
+      smokingTriggers: smokingTriggers,
       timeline: Timeline(
-        startDateQuitting: DateTime.now(), // Set start date as now or get from user
+        startDateQuitting:
+            DateTime.now(), // Set start date as now or get from user
         desiredDays: int.tryParse(desiredDaysController.text) ?? 0,
       ),
       support: socialSupportAvailable
@@ -45,10 +69,14 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
 
     final preferences = Preferences(
       notificationsEnabled: notificationsEnabled,
-      notificationFrequencyDays: notificationsEnabled ? int.tryParse(notificationFrequencyController.text) : null,
+      notificationFrequencyDays: notificationsEnabled
+          ? int.tryParse(notificationFrequencyController.text)
+          : null,
     );
 
     // save into LocalStorage
+    UserStorage.save(MAIN_INFORMATION_ENTRY, mainInformation);
+    UserStorage.save(PREFERENCES_ENTRY, mainInformation);
   }
 
   @override
@@ -61,9 +89,18 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
             shrinkWrap: true,
             children: <Widget>[
               TextFormField(
+                controller: userAliasController,
+                decoration: InputDecoration(
+                  labelText: 'Come vuoi essere chiamato?',
+                ),
+                keyboardType: TextInputType.name,
+              ),
+              SizedBox(height: 20),
+              TextFormField(
                 controller: averageCigarettesController,
                 decoration: InputDecoration(
-                  labelText: 'Quante sigarette hai fumato in media al giorno negli ultimi 15 giorni?',
+                  labelText:
+                      'Quante sigarette hai fumato in media al giorno negli ultimi 15 giorni?',
                 ),
                 keyboardType: TextInputType.number,
               ),
@@ -71,20 +108,76 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
               TextFormField(
                 controller: desiredDaysController,
                 decoration: InputDecoration(
-                  labelText: 'In quanti giorni vuoi smettere di fumare?',
+                  labelText:
+                      'In quante settimane vuoi smettere di fumare?',
                 ),
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 20),
-              TextFormField(
-                controller: smokingTriggersController,
+              Text(
+                  "Quali emozioni o situazioni ti fanno venire/aumentare la voglia di fumare:"),
+              SizedBox(height: 20),
+              DropdownButtonFormField<String>(
+                value: selectedTrigger,
                 decoration: InputDecoration(
-                  labelText: 'Quali sono le situazioni o le emozioni che scatenano il desiderio di fumare?',
+                  labelText: 'Seleziona una situazione/emozione',
                 ),
+                items: [
+                  'Stress',
+                  'Noia',
+                  'Ansia',
+                  'Socializzare',
+                  'Alcol',
+                  'Lavoro',
+                  'Studio',
+                  'Vedere altri che fumano',
+                ]
+                    .map((label) => DropdownMenuItem(
+                          child: Text(label),
+                          value: label,
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  if (value != null && !smokingTriggers.contains(value)) {
+                    setState(() {
+                      smokingTriggers.add(value);
+                    });
+                  }
+                },
+              ),
+              SizedBox(height: 20),
+              TextFormField(
+                controller: customTriggerController,
+                decoration: InputDecoration(
+                  labelText: 'Aggiungi una situazione/emozione personalizzata',
+                ),
+                onFieldSubmitted: (value) {
+                  if (value.isNotEmpty && !smokingTriggers.contains(value)) {
+                    setState(() {
+                      smokingTriggers.add(value);
+                      customTriggerController.clear();
+                    });
+                  }
+                },
+              ),
+              SizedBox(height: 20),
+              Wrap(
+                spacing: 8.0,
+                children: smokingTriggers.map((trigger) {
+                  return Chip(
+                    label: Text(trigger),
+                    onDeleted: () {
+                      setState(() {
+                        smokingTriggers.remove(trigger);
+                      });
+                    },
+                  );
+                }).toList(),
               ),
               SizedBox(height: 20),
               SwitchListTile(
-                title: Text('Hai un supporto sociale o familiare nel tuo percorso per smettere di fumare?'),
+                title: Text(
+                    'Hai un supporto sociale o familiare nel tuo percorso per smettere di fumare?'),
                 value: socialSupportAvailable,
                 onChanged: (bool? value) {
                   setState(() {
@@ -127,7 +220,8 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
                 SizedBox(height: 20),
               ],
               SwitchListTile(
-                title: Text('Vorresti ricevere notifiche per il supporto durante il tuo percorso per smettere di fumare?'),
+                title: Text(
+                    'Vorresti ricevere notifiche per il supporto durante il tuo percorso per smettere di fumare?'),
                 value: notificationsEnabled,
                 onChanged: (bool value) {
                   setState(() {
@@ -139,7 +233,8 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
                 TextFormField(
                   controller: notificationFrequencyController,
                   decoration: InputDecoration(
-                    labelText: 'Numero di giorni ogni quanto ricevere la notifica',
+                    labelText:
+                        'Numero di giorni ogni quanto ricevere la notifica',
                   ),
                   keyboardType: TextInputType.number,
                 ),
