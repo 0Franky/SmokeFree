@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smoke_free/consts/app_consts.dart';
 import 'package:smoke_free/consts/durations.dart';
 
 Widget buildIntroPage(final PageController pageController) {
@@ -8,7 +9,7 @@ Widget buildIntroPage(final PageController pageController) {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(
-          'Benvenuto in SmokeFree',
+          'Benvenuto in $APP_NAME',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),

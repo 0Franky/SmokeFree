@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:smoke_free/consts/app_consts.dart';
 import 'package:smoke_free/consts/durations.dart';
 import 'package:smoke_free/screens/WelcomePage/slides/InitialSetupPage.dart';
 import 'package:smoke_free/screens/WelcomePage/slides/IntroPage.dart';
+import 'package:smoke_free/style/theme.dart';
 // import 'package:smoke_free/screens/WelcomePage/slides/SummaryPage.dart';
 import 'package:smoke_free/widgets/Indicator.dart';
 
 void main() {
-  runApp(SmokeFreeApp());
-}
-
-class SmokeFreeApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'SmokeFree',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+  runApp(
+    MaterialApp(
+      title: APP_NAME,
+      theme: appTheme,
       home: WelcomePage(),
-    );
-  }
+    ),
+  );
 }
 
 class WelcomePage extends StatefulWidget {
@@ -59,7 +54,7 @@ class _WelcomePageState extends State<WelcomePage> {
         title: AnimatedOpacity(
             opacity: _currentPage == 0 ? 0 : 1,
             duration: ANIMATION_DURATION_MEDIUM,
-            child: Text('SmokeFree')),
+            child: Text(APP_NAME)),
         centerTitle: true,
       ),
       body: Padding(

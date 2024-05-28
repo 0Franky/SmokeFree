@@ -15,10 +15,12 @@ dependencies:
 
   cupertino_icons: ^1.0.6
   # local_shared: ^1.0.5
+  # json: ^0.20.2
   localstore:
     git:
       url: https://github.com/chuyentt/localstore.git
-  json: ^0.20.2
+
+  flutter_calendar_carousel: ^2.4.3
 
 dev_dependencies:
   flutter_test:
