@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smoke_free/consts/values.dart';
-import 'package:smoke_free/screens/WelcomePage/models/UserData.dart';
 import 'package:smoke_free/screens/WelcomePage/slides/InitialSetupPage.dart';
 import 'package:smoke_free/screens/WelcomePage/slides/IntroPage.dart';
-import 'package:smoke_free/screens/WelcomePage/slides/SummaryPage.dart';
+// import 'package:smoke_free/screens/WelcomePage/slides/SummaryPage.dart';
 import 'package:smoke_free/widgets/Indicator.dart';
 
 void main() {
@@ -31,14 +30,13 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   int _currentPage = 0;
   PageController _pageController = PageController(initialPage: 0);
-  final UserData _userData = UserData();
 
   @override
   Widget build(BuildContext context) {
     List<Widget> pages = [
       buildIntroPage(_pageController),
-      buildInitialSetupPage(setState, _userData, _pageController),
-      buildSummaryPage(context, _userData, _pageController),
+      InitialSetupPage(pageController: _pageController),
+      // buildSummaryPage(contex, _pageController),
     ];
 
     return Scaffold(
