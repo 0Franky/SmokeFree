@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:smoke_free/consts/app_consts.dart';
+import 'package:smoke_free/style/style.dart';
 import 'package:smoke_free/style/theme.dart';
+import 'package:smoke_free/widgets/card_button.dart';
 
 void main() {
   runApp(
@@ -27,6 +29,7 @@ class HomePage extends StatelessWidget {
       body: ListView(
         children: [
           SizedBox(height: 500, child: _buildCalendar(context)),
+          SizedBox(height: 30),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -34,6 +37,12 @@ class HomePage extends StatelessWidget {
                 Text(
                   "Come ti senti oggi?",
                   style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                Wrap(
+                  children: [
+                    CardButton(text: "Aggiungi azione"),
+                    CardButton(text: "Aggiungi nota"),
+                  ],
                 ),
               ],
             ),
@@ -73,7 +82,7 @@ class HomePage extends StatelessWidget {
 
         return Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(DEFAULT_RADIUS),
             color: bg,
             border: isToday ? Border.all(color: Colors.grey.shade200) : null,
           ),
