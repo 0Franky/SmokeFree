@@ -3,6 +3,7 @@ import 'package:smoke_free/consts/app_consts.dart';
 import 'package:smoke_free/consts/durations.dart';
 import 'package:smoke_free/screens/WelcomePage/slides/InitialSetupPage.dart';
 import 'package:smoke_free/screens/WelcomePage/slides/IntroPage.dart';
+import 'package:smoke_free/screens/WelcomePage/slides/SummaryPage.dart';
 import 'package:smoke_free/style/theme.dart';
 // import 'package:smoke_free/screens/WelcomePage/slides/SummaryPage.dart';
 import 'package:smoke_free/widgets/Indicator.dart';
@@ -32,7 +33,7 @@ class _WelcomePageState extends State<WelcomePage> {
     List<Widget> pages = [
       buildIntroPage(_pageController),
       InitialSetupPage(pageController: _pageController),
-      // buildSummaryPage(contex, _pageController),
+      buildSummaryPage(context, _pageController),
     ];
 
     return Scaffold(

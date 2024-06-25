@@ -62,6 +62,7 @@ class SmokingDesire extends Genericstoredata {
   @override
   static SmokingDesire fromJson(Map<String, dynamic> data) => SmokingDesire(
         desireScale: data['desireScale'] as int?,
-        distractionActivities: data['distractionActivities'] as List<String>?,
+        distractionActivities:
+            List<String>.from(data['distractionActivities'] ?? []),
       );
 }

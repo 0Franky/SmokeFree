@@ -34,10 +34,10 @@ class MainInformation extends Genericstoredata {
 
   @override
   static MainInformation fromJson(Map<String, dynamic> data) => MainInformation(
-        userAlias: data['averageCigarettesPerDay'] as String,
+        userAlias: data['userAlias'] as String,
         averageCigarettesPerDay: data['averageCigarettesPerDay'] as int,
         currentMaxCigarettesPerDay: data['currentMaxCigarettesPerDay'] as int,
-        smokingTriggers: data['smokingTriggers'] as List<String>,
+        smokingTriggers: List<String>.from(data['smokingTriggers']),
         timeline: Timeline.fromJson(data['timeline'] as Map<String, dynamic>),
         support: data['support'] != null
             ? Support.fromJson(data['support'] as Map<String, dynamic>)
