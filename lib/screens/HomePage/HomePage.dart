@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smoke_free/consts/app_consts.dart';
+import 'package:smoke_free/consts/values.dart';
+import 'package:smoke_free/models/store_data/DailyRecord.dart';
+import 'package:smoke_free/repos/UserStorage.dart';
+import 'package:smoke_free/screens/Diary/Diary.dart';
 import 'package:smoke_free/style/style.dart';
 import 'package:smoke_free/style/theme.dart';
+import 'package:smoke_free/utils/smoke_calculator.dart';
 import 'package:smoke_free/widgets/card_button.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(
-    MaterialApp(
+    GetMaterialApp(
       title: APP_NAME,
       theme: appTheme,
       home: HomePage(),
@@ -22,10 +29,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(APP_NAME),
-        centerTitle: true,
-      ),
+      appBar: APP_BAR(),
       body: ListView(
         children: [
           SizedBox(height: 500, child: _buildCalendar(context)),
@@ -34,14 +38,26 @@ class HomePage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
+                QuickTodayStats(),
                 Text(
                   "Come ti senti oggi?",
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 Wrap(
                   children: [
-                    CardButton(text: "Aggiungi azione"),
-                    CardButton(text: "Aggiungi nota"),
+                    CardButton(
+                      icon: FontAwesomeIcons.plus,
+                      text: "Aggiungi azione",
+                    ),
+                    CardButton(
+                      icon: FontAwesomeIcons.penToSquare,
+                      text: "Il mio diario",
+                      onTap: () => Get.to(() => DiaryPage()),
+                    ),
+                    CardButton(
+                      icon: FontAwesomeIcons.crown,
+                      text: "Aggiungi obbiettivo",
+                    ),
                   ],
                 ),
               ],
@@ -95,6 +111,110 @@ class HomePage extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class QuickTodayStats extends StatefulWidget {
+  const QuickTodayStats({
+    super.key,
+  });
+
+  @override
+  State<QuickTodayStats> createState() => _QuickTodayStatsState();
+}
+
+class _QuickTodayStatsState extends State<QuickTodayStats> {
+  bool loading = true;
+
+  int numSmoked = 0;
+  int maxSmokable = 0;
+  Color textColor = Colors.transparent;
+  bool showWarning = false;
+  String warningText = "";
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+
+    getTextColor();
+
+    buildWarning();
+  }
+
+  void fetchData() async {
+    DailyRecord data = await getDailyRecord();
+
+    numSmoked = data.maxAllowedCigarettes;
+    maxSmokable = data.numCigarettesSmoked;
+    setState(() {
+      loading = false;
+    });
+  }
+
+  void buildWarning() {
+    if (numSmoked == maxSmokable) {
+      warningText = "Hai raggiunto il limite di sigarette giornaliere";
+      showWarning = true;
+    } else if (numSmoked > maxSmokable) {
+      warningText = "Hai fumando troppo, limite superato";
+      showWarning = true;
+    } else {
+      warningText = "Stai fumando troppo velocemente, potresti sforare";
+      showWarning = calculateSmokingRatio(numSmoked, maxSmokable);
+    }
+  }
+
+  void getTextColor() {
+    if (numSmoked < maxSmokable - 1) {
+      textColor = Colors.green;
+    } else if (numSmoked <= maxSmokable) {
+      textColor = Colors.orange;
+    } else {
+      textColor = Colors.red;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (loading) return SizedBox();
+
+    return Column(
+      children: [
+        Text(
+          "Ecco le tue statistiche di oggi",
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text(
+              "●  Hai fumato $numSmoked sigarette",
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(color: textColor),
+            ),
+            Text(
+              "●  Oggi ne puoi fumare massimo $maxSmokable sigarette",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
+        ),
+        if (showWarning) ...[
+          SizedBox(height: 10),
+          Text(
+            warningText,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontStyle: FontStyle.italic,
+                  color: Colors.grey,
+                ),
+          ),
+        ],
+        SizedBox(height: 30),
+      ],
     );
   }
 }

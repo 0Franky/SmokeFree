@@ -6,10 +6,11 @@ import 'package:smoke_free/screens/WelcomePage/slides/IntroPage.dart';
 import 'package:smoke_free/style/theme.dart';
 // import 'package:smoke_free/screens/WelcomePage/slides/SummaryPage.dart';
 import 'package:smoke_free/widgets/Indicator.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(
-    MaterialApp(
+    GetMaterialApp(
       title: APP_NAME,
       theme: appTheme,
       home: WelcomePage(),

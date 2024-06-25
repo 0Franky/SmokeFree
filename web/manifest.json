@@ -1,6 +1,6 @@
 {
-    "name": "smoke_free",
-    "short_name": "smoke_free",
+    "name": "smokefree",
+    "short_name": "smokefree",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

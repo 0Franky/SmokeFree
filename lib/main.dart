@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smoke_free/consts/app_consts.dart';
 import 'package:smoke_free/screens/WelcomePage/WelcomePage.dart';
 import 'package:smoke_free/style/theme.dart';
+import 'package:get/get.dart';
 
 void main() {
   prepareApp();
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: APP_NAME,
       theme: appTheme,
       home: WelcomePage(),

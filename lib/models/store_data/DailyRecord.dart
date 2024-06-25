@@ -1,19 +1,21 @@
 import 'package:smoke_free/models/store_data/GenericStoreData.dart';
 
 class DailyRecord extends Genericstoredata {
-  final DateTime date;
+  DateTime? date;
   final int maxAllowedCigarettes;
-  final int numCigarettesSmoked;
-  final String personalNotes;
-  final SmokingDesire? smokingDesire;
+  int numCigarettesSmoked;
+  String personalNotes;
+  SmokingDesire? smokingDesire;
 
   DailyRecord({
-    required this.date,
+    this.date,
     required this.maxAllowedCigarettes,
-    required this.numCigarettesSmoked,
-    required this.personalNotes,
+    this.numCigarettesSmoked = 0,
+    this.personalNotes = "",
     this.smokingDesire,
-  });
+  }) {
+    date ??= DateTime.now();
+  }
 
   bool hasSmokeDesire() => smokingDesire != null;
   bool hasSmoked() => numCigarettesSmoked > 0;

@@ -20,6 +20,56 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
+        },
+        {
+            "name": "Chrome [HTML 0000]",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "web-server",
+                "--web-renderer",
+                "html",
+                "--web-hostname",
+                "0.0.0.0",
+                "--web-port",
+                "8080",
+            ]
+        },
+        {
+            "name": "Chrome [HTML 0000] (profile mode)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "web-server",
+                "--profile",
+                "--web-renderer",
+                "html",
+                "--web-hostname",
+                "0.0.0.0",
+                "--web-port",
+                "8080",
+            ]
+        },
+        {
+            "name": "Chrome [HTML 0000] (release mode)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "web-server",
+                "--release",
+                "--web-renderer",
+                "html",
+                "--web-hostname",
+                "0.0.0.0",
+                "--web-port",
+                "8080",
+            ]
         }
     ]
 }

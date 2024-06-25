@@ -18,3 +18,16 @@ int calculateNextMaxCigarettes(int maxCigarettes) {
 
   return (maxCigarettes * (1 - WEEKLY_REDUCTION_PERCENTAGE)).round();
 }
+
+bool calculateSmokingRatio(int numSmoked, int maxSmokable) {
+  if (numSmoked == 1) return false;
+
+  // Get the current time
+  DateTime now = DateTime.now();
+
+  var smokeRatio = (DAY_HOURS / maxSmokable);
+  
+  double minTime = (smokeRatio * numSmoked) - (smokeRatio / 2);
+
+  return minTime > now.hour + (now.minute / 60);
+}
