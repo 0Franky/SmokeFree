@@ -75,7 +75,7 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
                 controller: averageCigarettesController,
                 decoration: InputDecoration(
                   labelText:
-                      'Quante sigarette hai fumato in media al giorno negli ultimi 15 giorni?',
+                      'Quante sigarette hai fumato in media al giorno negli ultimi $NUMBER_DAYS_LAST_CIGARETTES_SMOKED giorni?',
                 ),
                 keyboardType: TextInputType.number,
               ),

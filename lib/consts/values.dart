@@ -1,3 +1,4 @@
+final int NUMBER_DAYS_LAST_CIGARETTES_SMOKED = 15;
 final double WEEKLY_REDUCTION_PERCENTAGE = 0.4;
 final double DAY_HOURS = 24;
 final double AWAKE_HOURS = 17;

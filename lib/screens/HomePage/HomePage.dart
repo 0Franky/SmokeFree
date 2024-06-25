@@ -197,8 +197,8 @@ class _QuickTodayStatsState extends State<QuickTodayStats> {
   void fetchData() async {
     DailyRecord data = await getDailyRecord(DateTime.now()); // TODO da camiare con data attuale
 
-    numSmoked = data.maxAllowedCigarettes;
-    maxSmokable = data.numCigarettesSmoked;
+    numSmoked = data.numCigarettesSmoked;
+    maxSmokable = data.maxAllowedCigarettes;
     setState(() {
       loading = false;
     });

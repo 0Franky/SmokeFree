@@ -1,3 +1,4 @@
+import 'package:smoke_free/consts/values.dart';
 import 'package:smoke_free/models/store_data/DailyRecord.dart';
 import 'package:smoke_free/models/store_data/MainInformation.dart';
 import 'package:smoke_free/models/store_data/Preferences.dart';
@@ -19,7 +20,7 @@ Future<void> saveData({
   final mainInformation = MainInformation(
     userAlias: userAlias,
     averageCigarettesPerDay: averageCigarettes,
-    currentMaxCigarettesPerDay: averageCigarettes,
+    currentMaxCigarettesPerDay: (averageCigarettes / NUMBER_DAYS_LAST_CIGARETTES_SMOKED).round(),
     smokingTriggers: smokingTriggers,
     timeline: Timeline(
       startDateQuitting:
