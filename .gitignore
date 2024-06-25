@@ -42,3 +42,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 local_memo.md
+
+test*.dart
