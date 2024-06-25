@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smoke_free/consts/app_consts.dart';
+import 'package:smoke_free/repos/user_storage_utils.dart';
+import 'package:smoke_free/screens/HomePage/HomePage.dart';
 import 'package:smoke_free/screens/WelcomePage/WelcomePage.dart';
 import 'package:smoke_free/style/theme.dart';
 import 'package:get/get.dart';
@@ -21,7 +23,16 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: APP_NAME,
       theme: appTheme,
-      home: WelcomePage(),
+      home: FutureBuilder<bool>(
+        future: isFirstOpen(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            bool isFirstOpen = snapshot.data ?? false;
+            return isFirstOpen ? WelcomePage() : const HomePage();
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 }
