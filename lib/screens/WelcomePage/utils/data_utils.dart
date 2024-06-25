@@ -68,7 +68,7 @@ Future<void> saveDailyGoals(int averageCigarettes, int desiredDays) async {
     desiredDays--;
 
     // save daily goals into LocalStorage
-    updateDailyRecord(dailyRecord);
+    await updateDailyRecord(dailyRecord);
   }
 }
 

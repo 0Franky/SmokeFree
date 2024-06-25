@@ -40,8 +40,7 @@ Future<DailyRecord> getDailyRecord(DateTime date) async {
 }
 
 String getDailyRecordMapKey(DateTime date) {
-  String dayKey = "${date.day}-${date.month}-${date.year}";
-  return dayKey;
+  return "${date.day}-${date.month}-${date.year}";
 }
 
 Future<bool> isFirstOpen() async {
@@ -49,7 +48,7 @@ Future<bool> isFirstOpen() async {
 }
 
 Future<void> updateDailyRecord(DailyRecord dailyRecord) async {
-  DailyRecordsMap dailyMap = (await getDailyRecordsMap()) ?? DailyRecordsMap();
+  DailyRecordsMap dailyMap = await getDailyRecordsMap();
   String dayKey = getDailyRecordMapKey(dailyRecord.date);
   dailyMap.dailyRecords[dayKey] = dailyRecord;
   await UserStorage.save(DAILY_RECORD_MAP_ENTRY, dailyMap);
