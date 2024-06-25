@@ -127,14 +127,11 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 20),
-              Text(
-                  "Quali emozioni o situazioni ti fanno venire/aumentare la voglia di fumare:"),
-              SizedBox(height: 20),
               TypeAheadField(
                 textFieldConfiguration: TextFieldConfiguration(
                   controller: typeAheadController,
                   decoration: InputDecoration(
-                    labelText: 'Seleziona o aggiungi una situazione/emozione',
+                    labelText: 'Aggiungi quali emozioni o situazioni ti fanno venire/aumentare la voglia di fumare',
                   ),
                 ),
                 suggestionsCallback: (pattern) {
