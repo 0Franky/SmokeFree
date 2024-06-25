@@ -3,6 +3,8 @@ import 'package:smoke_free/consts/values.dart';
 import 'package:smoke_free/models/store_data/MainInformation.dart';
 import 'package:smoke_free/models/store_data/Preferences.dart';
 import 'package:smoke_free/repos/UserStorage.dart';
+import 'package:smoke_free/screens/WelcomePage/utils/data_utils.dart';
+import 'package:smoke_free/screens/WelcomePage/utils/variables.dart';
 import 'package:smoke_free/utils/smoke_calculator.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
@@ -30,16 +32,6 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
       TextEditingController(text: NOTIFICATION_FREQUENCY.toString());
 
   final TextEditingController typeAheadController = TextEditingController();
-  final List<String> suggestions = [
-    'Stress',
-    'Noia',
-    'Ansia',
-    'Socializzare',
-    'Alcol',
-    'Lavoro',
-    'Studio',
-    'Vedere altri che fumano',
-  ];
   final List<String> additionalSuggestions = [];
 
   bool socialSupportAvailable = false;
@@ -60,38 +52,6 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
             calcucateTotalTimeToQuit(averageCigarettesNumber).toString();
       }
     });
-  }
-
-  void saveData() {
-    final mainInformation = MainInformation(
-      userAlias: userAliasController.text,
-      averageCigarettesPerDay:
-          int.tryParse(averageCigarettesController.text) ?? 0,
-      currentMaxCigarettesPerDay: 0,
-      smokingTriggers: smokingTriggers,
-      timeline: Timeline(
-        startDateQuitting:
-            DateTime.now(), // Set start date as now or get from user
-        desiredDays: int.tryParse(desiredDaysController.text) ?? 0,
-      ),
-      support: socialSupportAvailable
-          ? Support(
-              alias: aliasController.text,
-              supportContact: supportValueController.text,
-            )
-          : null,
-    );
-
-    final preferences = Preferences(
-      notificationsEnabled: notificationsEnabled,
-      notificationFrequencyDays: notificationsEnabled
-          ? int.tryParse(notificationFrequencyController.text)
-          : null,
-    );
-
-    // save into LocalStorage
-    UserStorage.save(MAIN_INFORMATION_ENTRY, mainInformation);
-    UserStorage.save(PREFERENCES_ENTRY, mainInformation);
   }
 
   @override
@@ -252,19 +212,32 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
               ],
               SizedBox(height: 40),
               ElevatedButton(
-                onPressed: () {
-                  saveData();
-                  widget.pageController.nextPage(
-                    duration: Duration(milliseconds: 500),
-                    curve: Curves.ease,
-                  );
-                },
+                onPressed: finalize,
                 child: Text('Continua'),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void finalize() {
+    saveData(
+      userAlias: userAliasController.text,
+      averageCigarettes: int.tryParse(averageCigarettesController.text) ?? 0,
+      smokingTriggers: smokingTriggers,
+      desiredDays: int.tryParse(desiredDaysController.text) ?? 0,
+      socialSupportAvailable: socialSupportAvailable,
+      supportAlias: aliasController.text,
+      supportValue: supportValueController.text,
+      notificationsEnabled: notificationsEnabled,
+      notificationFrequency: int.tryParse(notificationFrequencyController.text),
+    );
+
+    widget.pageController.nextPage(
+      duration: Duration(milliseconds: 500),
+      curve: Curves.ease,
     );
   }
 }
