@@ -19,7 +19,7 @@ Future<void> saveData({
   final mainInformation = MainInformation(
     userAlias: userAlias,
     averageCigarettesPerDay: averageCigarettes,
-    currentMaxCigarettesPerDay: 0,
+    currentMaxCigarettesPerDay: averageCigarettes,
     smokingTriggers: smokingTriggers,
     timeline: Timeline(
       startDateQuitting:
