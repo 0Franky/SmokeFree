@@ -3,6 +3,7 @@ import 'package:smoke_free/models/store_data/MainInformation.dart';
 import 'package:smoke_free/models/store_data/Preferences.dart';
 import 'package:smoke_free/repos/UserStorage.dart';
 import 'package:smoke_free/utils/smoke_calculator.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class InitialSetupPage extends StatefulWidget {
   final PageController pageController;
@@ -26,6 +27,19 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
   final TextEditingController supportValueController = TextEditingController();
   final TextEditingController notificationFrequencyController =
       TextEditingController(text: "7");
+
+  final TextEditingController typeAheadController = TextEditingController();
+  final List<String> suggestions = [
+    'Stress',
+    'Noia',
+    'Ansia',
+    'Socializzare',
+    'Alcol',
+    'Lavoro',
+    'Studio',
+    'Vedere altri che fumano',
+  ];
+  final List<String> additionalSuggestions = [];
 
   bool socialSupportAvailable = false;
   bool notificationsEnabled = false;
@@ -108,8 +122,7 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
               TextFormField(
                 controller: desiredDaysController,
                 decoration: InputDecoration(
-                  labelText:
-                      'In quante settimane vuoi smettere di fumare?',
+                  labelText: 'In quante settimane vuoi smettere di fumare?',
                 ),
                 keyboardType: TextInputType.number,
               ),
@@ -117,45 +130,42 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
               Text(
                   "Quali emozioni o situazioni ti fanno venire/aumentare la voglia di fumare:"),
               SizedBox(height: 20),
-              DropdownButtonFormField<String>(
-                value: selectedTrigger,
-                decoration: InputDecoration(
-                  labelText: 'Seleziona una situazione/emozione',
+              TypeAheadField(
+                textFieldConfiguration: TextFieldConfiguration(
+                  controller: typeAheadController,
+                  decoration: InputDecoration(
+                    labelText: 'Seleziona o aggiungi una situazione/emozione',
+                  ),
                 ),
-                items: [
-                  'Stress',
-                  'Noia',
-                  'Ansia',
-                  'Socializzare',
-                  'Alcol',
-                  'Lavoro',
-                  'Studio',
-                  'Vedere altri che fumano',
-                ]
-                    .map((label) => DropdownMenuItem(
-                          child: Text(label),
-                          value: label,
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  if (value != null && !smokingTriggers.contains(value)) {
-                    setState(() {
-                      smokingTriggers.add(value);
-                    });
+                suggestionsCallback: (pattern) {
+                  final List<String> matchingSuggestions = suggestions
+                      .where((item) =>
+                          item.toLowerCase().contains(pattern.toLowerCase()))
+                      .toList();
+
+                  // Aggiungi il nuovo trigger solo se non è già presente nei suggerimenti esistenti
+                  if (pattern.isNotEmpty &&
+                      !matchingSuggestions.contains(pattern) &&
+                      !additionalSuggestions.contains(pattern)) {
+                    additionalSuggestions.add(pattern);
                   }
+
+                  return [
+                    ...additionalSuggestions,
+                    ...matchingSuggestions,
+                  ];
                 },
-              ),
-              SizedBox(height: 20),
-              TextFormField(
-                controller: customTriggerController,
-                decoration: InputDecoration(
-                  labelText: 'Aggiungi una situazione/emozione personalizzata',
-                ),
-                onFieldSubmitted: (value) {
-                  if (value.isNotEmpty && !smokingTriggers.contains(value)) {
+                itemBuilder: (context, suggestion) {
+                  return ListTile(
+                    title: Text(suggestion),
+                  );
+                },
+                onSuggestionSelected: (suggestion) {
+                  if (!smokingTriggers.contains(suggestion)) {
                     setState(() {
-                      smokingTriggers.add(value);
-                      customTriggerController.clear();
+                      smokingTriggers.add(suggestion);
+                      typeAheadController.clear();
+                      // additionalSuggestions.clear();
                     });
                   }
                 },
@@ -163,6 +173,7 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
               SizedBox(height: 20),
               Wrap(
                 spacing: 8.0,
+                runSpacing: 8.0,
                 children: smokingTriggers.map((trigger) {
                   return Chip(
                     label: Text(trigger),
