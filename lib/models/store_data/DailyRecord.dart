@@ -1,18 +1,42 @@
 import 'package:smoke_free/models/store_data/GenericStoreData.dart';
 
+class DailyRecordsMap extends Genericstoredata {
+  Map<String, DailyRecord> dailyRecords = {};
+
+  @override
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> json = {};
+    dailyRecords.forEach((key, value) {
+      json[key] = value.toJson(); // Converti ogni DailyRecord in JSON
+    });
+    return json;
+  }
+
+  @override
+  static DailyRecordsMap fromJson(Map<String, dynamic> data) {
+    DailyRecordsMap dailyRecordsMap = DailyRecordsMap();
+    data.forEach((key, value) {
+      dailyRecordsMap.dailyRecords[key] = DailyRecord.fromJson(value);
+    });
+    return dailyRecordsMap;
+  }
+}
+
 class DailyRecord extends Genericstoredata {
-  DateTime? date;
+  DateTime date;
   final int maxAllowedCigarettes;
   int numCigarettesSmoked;
   String personalNotes;
   SmokingDesire? smokingDesire;
+  bool isGoal;
 
   DailyRecord({
-    this.date,
+    required this.date,
     required this.maxAllowedCigarettes,
     this.numCigarettesSmoked = 0,
     this.personalNotes = "",
     this.smokingDesire,
+    this.isGoal = false,
   }) {
     date ??= DateTime.now();
   }
@@ -28,6 +52,7 @@ class DailyRecord extends Genericstoredata {
         'numCigarettesSmoked': numCigarettesSmoked,
         'personalNotes': personalNotes,
         'smokingDesire': smokingDesire?.toJson(), // Handle null case
+        'isGoal': isGoal,
       };
 
   @override
@@ -41,6 +66,7 @@ class DailyRecord extends Genericstoredata {
             ? SmokingDesire.fromJson(
                 data['smokingDesire'] as Map<String, dynamic>)
             : null,
+        isGoal: data['isGoal'] as bool,
       );
 }
 

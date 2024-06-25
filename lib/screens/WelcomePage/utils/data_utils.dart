@@ -5,7 +5,7 @@ import 'package:smoke_free/repos/UserStorage.dart';
 import 'package:smoke_free/repos/user_storage_utils.dart';
 import 'package:smoke_free/utils/smoke_calculator.dart';
 
-void saveData({
+Future<void> saveData({
   required String userAlias,
   required int averageCigarettes,
   required List<String> smokingTriggers,
@@ -15,7 +15,7 @@ void saveData({
   required String supportValue,
   required bool notificationsEnabled,
   required int? notificationFrequency,
-}) {
+}) async {
   final mainInformation = MainInformation(
     userAlias: userAlias,
     averageCigarettesPerDay: averageCigarettes,
@@ -45,10 +45,10 @@ void saveData({
   UserStorage.save(PREFERENCES_ENTRY, preferences);
 
   // save daily goals
-  saveDailyGoals(averageCigarettes, desiredDays);
+  await saveDailyGoals(averageCigarettes, desiredDays);
 }
 
-void saveDailyGoals(int averageCigarettes, int desiredDays) {
+Future<void> saveDailyGoals(int averageCigarettes, int desiredDays) async {
   int week = 1;
   int maxCigarettes = averageCigarettes;
   int? calculatedDays =
@@ -59,6 +59,7 @@ void saveDailyGoals(int averageCigarettes, int desiredDays) {
     final dailyRecord = DailyRecord(
       date: getNextMonday(week),
       maxAllowedCigarettes: maxCigarettes,
+      isGoal: true,
     );
 
     maxCigarettes =
@@ -67,7 +68,7 @@ void saveDailyGoals(int averageCigarettes, int desiredDays) {
     desiredDays--;
 
     // save daily goals into LocalStorage
-    UserStorage.save(DAILY_RECORD_ENTRY, dailyRecord);
+    updateDailyRecord(dailyRecord);
   }
 }
 

@@ -10,12 +10,16 @@ void main() {
     GetMaterialApp(
       title: APP_NAME,
       theme: appTheme,
-      home: DiaryPage(),
+      home: DiaryPage(date: DateTime.now()),
     ),
   );
 }
 
 class DiaryPage extends StatefulWidget {
+  final DateTime date;
+
+  const DiaryPage({super.key, required this.date});
+
   @override
   _DiaryPageState createState() => _DiaryPageState();
 }
@@ -73,13 +77,13 @@ class _DiaryPageState extends State<DiaryPage> {
   }
 
   Future<void> _loadDiaryContent() async {
-    final data = await getDailyRecord();
+    final data = await getDailyRecord(widget.date);
     diaryContent.text = data.personalNotes;
   }
 
   Future<void> _saveDiaryContent() async {
-    final data = await getDailyRecord();
+    final data = await getDailyRecord(widget.date);
     data.personalNotes = diaryContent.text;
-    await UserStorage.save(DAILY_RECORD_ENTRY, data);
+    await updateDailyRecord(data);
   }
 }

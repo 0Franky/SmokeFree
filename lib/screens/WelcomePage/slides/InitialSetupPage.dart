@@ -222,8 +222,8 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
     );
   }
 
-  void finalize() {
-    saveData(
+  void finalize() async {
+    await saveData(
       userAlias: userAliasController.text,
       averageCigarettes: int.tryParse(averageCigarettesController.text) ?? 0,
       smokingTriggers: smokingTriggers,

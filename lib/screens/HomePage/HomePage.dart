@@ -53,7 +53,9 @@ class HomePage extends StatelessWidget {
                     CardButton(
                       icon: FontAwesomeIcons.penToSquare,
                       text: "Il mio diario",
-                      onTap: () => Get.to(() => DiaryPage()),
+                      onTap: () => Get.to(() => DiaryPage(
+                          date: DateTime
+                              .now())), // TODO da camiare con data attuale
                     ),
                     CardButton(
                       icon: FontAwesomeIcons.crown,
@@ -93,26 +95,74 @@ class HomePage extends StatelessWidget {
         bool isThisMonthDay,
         DateTime day,
       ) {
-        final bg = isSelectedDay
-            ? Color.fromARGB(255, 0, 83, 119)
-            : Color.fromRGBO(5, 47, 95, 0.1);
-
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(DEFAULT_RADIUS),
-            color: bg,
-            border: isToday ? Border.all(color: Colors.grey.shade200) : null,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Center(child: Text(day.day.toString())),
-            ],
-          ),
+        return CalendarDayWidget(
+          isSelectedDay: isSelectedDay,
+          isToday: isToday,
+          day: day,
         );
       },
     );
+  }
+}
+
+class CalendarDayWidget extends StatefulWidget {
+  final bool isSelectedDay;
+  final bool isToday;
+  final DateTime day;
+
+  const CalendarDayWidget({
+    super.key,
+    required this.isSelectedDay,
+    required this.isToday,
+    required this.day,
+  });
+
+  @override
+  State<CalendarDayWidget> createState() => _CalendarDayWidgetState();
+}
+
+class _CalendarDayWidgetState extends State<CalendarDayWidget> {
+  late final Color bg;
+  bool hasGoal = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    bg = widget.isSelectedDay
+        ? const Color.fromARGB(255, 0, 83, 119)
+        : const Color.fromRGBO(5, 47, 95, 0.1);
+
+    checkHasGoal();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(DEFAULT_RADIUS),
+        color: bg,
+        border: widget.isToday ? Border.all(color: Colors.grey.shade200) : null,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (hasGoal)
+            Center(
+                child: FaIcon(
+              FontAwesomeIcons.crown,
+              size: 16,
+            )),
+          Center(child: Text(widget.day.day.toString())),
+        ],
+      ),
+    );
+  }
+
+  Future<void> checkHasGoal() async {
+    hasGoal = (await getDailyRecord(widget.day)).isGoal;
+    setState(() {});
   }
 }
 
@@ -145,7 +195,7 @@ class _QuickTodayStatsState extends State<QuickTodayStats> {
   }
 
   void fetchData() async {
-    DailyRecord data = await getDailyRecord();
+    DailyRecord data = await getDailyRecord(DateTime.now());
 
     numSmoked = data.maxAllowedCigarettes;
     maxSmokable = data.numCigarettesSmoked;
