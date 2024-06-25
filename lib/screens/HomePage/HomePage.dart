@@ -6,6 +6,7 @@ import 'package:smoke_free/consts/app_consts.dart';
 import 'package:smoke_free/consts/values.dart';
 import 'package:smoke_free/models/store_data/DailyRecord.dart';
 import 'package:smoke_free/repos/UserStorage.dart';
+import 'package:smoke_free/repos/user_storage_utils.dart';
 import 'package:smoke_free/screens/Diary/Diary.dart';
 import 'package:smoke_free/style/style.dart';
 import 'package:smoke_free/style/theme.dart';

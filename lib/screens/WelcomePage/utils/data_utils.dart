@@ -2,6 +2,7 @@ import 'package:smoke_free/models/store_data/DailyRecord.dart';
 import 'package:smoke_free/models/store_data/MainInformation.dart';
 import 'package:smoke_free/models/store_data/Preferences.dart';
 import 'package:smoke_free/repos/UserStorage.dart';
+import 'package:smoke_free/repos/user_storage_utils.dart';
 import 'package:smoke_free/utils/smoke_calculator.dart';
 
 void saveData({
