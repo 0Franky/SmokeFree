@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smoke_free/consts/values.dart';
 import 'package:smoke_free/models/store_data/MainInformation.dart';
 import 'package:smoke_free/models/store_data/Preferences.dart';
 import 'package:smoke_free/repos/UserStorage.dart';
@@ -26,7 +27,7 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
   final TextEditingController aliasController = TextEditingController();
   final TextEditingController supportValueController = TextEditingController();
   final TextEditingController notificationFrequencyController =
-      TextEditingController(text: "7");
+      TextEditingController(text: NOTIFICATION_FREQUENCY.toString());
 
   final TextEditingController typeAheadController = TextEditingController();
   final List<String> suggestions = [
@@ -131,7 +132,8 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
                 textFieldConfiguration: TextFieldConfiguration(
                   controller: typeAheadController,
                   decoration: InputDecoration(
-                    labelText: 'Aggiungi quali emozioni o situazioni ti fanno venire/aumentare la voglia di fumare',
+                    labelText:
+                        'Aggiungi quali emozioni o situazioni ti fanno venire/aumentare la voglia di fumare',
                   ),
                 ),
                 suggestionsCallback: (pattern) {
