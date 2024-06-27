@@ -8,7 +8,7 @@ import 'package:smoke_free/utils/smoke_calculator.dart';
 
 Future<void> saveData({
   required String userAlias,
-  required int averageCigarettes,
+  required int averageCigarettesLatestDays,
   required List<String> smokingTriggers,
   required int desiredDays,
   required bool socialSupportAvailable,
@@ -17,10 +17,14 @@ Future<void> saveData({
   required bool notificationsEnabled,
   required int? notificationFrequency,
 }) async {
+  final int averageCigarettes =
+      (averageCigarettesLatestDays / NUMBER_DAYS_LAST_CIGARETTES_SMOKED)
+          .round();
+
   final mainInformation = MainInformation(
     userAlias: userAlias,
     averageCigarettesPerDay: averageCigarettes,
-    currentMaxCigarettesPerDay: (averageCigarettes / NUMBER_DAYS_LAST_CIGARETTES_SMOKED).round(),
+    currentMaxCigarettesPerDay: averageCigarettes,
     smokingTriggers: smokingTriggers,
     timeline: Timeline(
       startDateQuitting:

@@ -3,7 +3,7 @@ import 'package:smoke_free/models/store_data/GenericStoreData.dart';
 class MainInformation extends Genericstoredata {
   final String userAlias;
   final int averageCigarettesPerDay;
-  final int currentMaxCigarettesPerDay;
+  int currentMaxCigarettesPerDay;
 
   final List<String>
       smokingTriggers; // List of triggers (e.g.: stress, boredom, anxiety)

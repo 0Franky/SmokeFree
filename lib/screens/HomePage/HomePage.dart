@@ -161,7 +161,7 @@ class _CalendarDayWidgetState extends State<CalendarDayWidget> {
   }
 
   Future<void> checkHasGoal() async {
-    hasGoal = (await getDailyRecord(widget.day)).isGoal;
+    hasGoal = (await getDailyRecord(widget.day))!.isGoal;
     setState(() {});
   }
 }
@@ -187,21 +187,26 @@ class _QuickTodayStatsState extends State<QuickTodayStats> {
   @override
   void initState() {
     super.initState();
-    fetchData();
-
-    getTextColor();
-
-    buildWarning();
+    initData();
   }
 
-  void fetchData() async {
-    DailyRecord data = await getDailyRecord(DateTime.now()); // TODO da camiare con data attuale
+  Future<void> initData() async {
+    await fetchData();
+    
+    getTextColor();
+    
+    buildWarning();
 
-    numSmoked = data.numCigarettesSmoked;
-    maxSmokable = data.maxAllowedCigarettes;
     setState(() {
       loading = false;
     });
+  }
+
+  Future<void> fetchData() async {
+    DailyRecord data = (await getDailyRecord(DateTime.now()))!; // TODO da camiare con data attuale
+
+    numSmoked = data.numCigarettesSmoked;
+    maxSmokable = data.maxAllowedCigarettes;
   }
 
   void buildWarning() {
@@ -249,7 +254,7 @@ class _QuickTodayStatsState extends State<QuickTodayStats> {
                   ?.copyWith(color: textColor),
             ),
             Text(
-              "●  Oggi ne puoi fumare massimo $maxSmokable sigarette",
+              "●  Oggi puoi fumare massimo $maxSmokable sigarette",
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],

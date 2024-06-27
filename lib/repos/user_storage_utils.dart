@@ -17,9 +17,11 @@ Future<DailyRecordsMap> getDailyRecordsMap() async {
       DailyRecordsMap();
 }
 
-Future<DailyRecord> getDailyRecord(DateTime date) async {
+Future<DailyRecord?> getDailyRecord(DateTime date) async {
   DailyRecordsMap? dailyMap = await getDailyRecordsMap();
-  MainInformation mainInfo = (await getMainInformation())!;
+  MainInformation? mainInfo = await getMainInformation();
+
+  if (mainInfo == null) return null;
 
   String dayKey = getDailyRecordMapKey(date);
 

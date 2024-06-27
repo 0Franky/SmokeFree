@@ -225,7 +225,7 @@ class _InitialSetupPageState extends State<InitialSetupPage> {
   void finalize() async {
     await saveData(
       userAlias: userAliasController.text,
-      averageCigarettes: int.tryParse(averageCigarettesController.text) ?? 0,
+      averageCigarettesLatestDays: int.tryParse(averageCigarettesController.text) ?? 0,
       smokingTriggers: smokingTriggers,
       desiredDays: int.tryParse(desiredDaysController.text) ?? 0,
       socialSupportAvailable: socialSupportAvailable,

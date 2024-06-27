@@ -78,12 +78,12 @@ class _DiaryPageState extends State<DiaryPage> {
 
   Future<void> _loadDiaryContent() async {
     final data = await getDailyRecord(widget.date);
-    diaryContent.text = data.personalNotes;
+    diaryContent.text = data!.personalNotes;
   }
 
   Future<void> _saveDiaryContent() async {
     final data = await getDailyRecord(widget.date);
-    data.personalNotes = diaryContent.text;
+    data!.personalNotes = diaryContent.text;
     await updateDailyRecord(data);
   }
 }
