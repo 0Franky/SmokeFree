@@ -8,18 +8,23 @@ import 'package:smoke_free/models/store_data/DailyRecord.dart';
 import 'package:smoke_free/repos/UserStorage.dart';
 import 'package:smoke_free/repos/user_storage_utils.dart';
 import 'package:smoke_free/screens/Diary/Diary.dart';
+import 'package:smoke_free/screens/WelcomePage/utils/DateTimeProvider.dart';
 import 'package:smoke_free/style/style.dart';
 import 'package:smoke_free/style/theme.dart';
 import 'package:smoke_free/utils/smoke_calculator.dart';
 import 'package:smoke_free/widgets/card_button.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    GetMaterialApp(
-      title: APP_NAME,
-      theme: appTheme,
-      home: HomePage(),
+    ChangeNotifierProvider(
+      create: (context) => DateTimeProvider(DateTime.now()),
+      child: GetMaterialApp(
+        title: APP_NAME,
+        theme: appTheme,
+        home: HomePage(),
+      ),
     ),
   );
 }
@@ -32,8 +37,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  DateTime _currentSelectedDate = DateTime.now();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +49,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                QuickTodayStats(currentSelectedDate: _currentSelectedDate),
+                QuickTodayStats(),
                 Text(
                   "Come ti senti oggi?",
                   style: Theme.of(context).textTheme.headlineSmall,
@@ -60,8 +63,7 @@ class _HomePageState extends State<HomePage> {
                     CardButton(
                       icon: FontAwesomeIcons.penToSquare,
                       text: "Il mio diario",
-                      onTap: () =>
-                          Get.to(() => DiaryPage(date: _currentSelectedDate)),
+                      onTap: () => Get.to(() => DiaryPage()),
                     ),
                     CardButton(
                       icon: FontAwesomeIcons.crown,
@@ -78,6 +80,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildCalendar(BuildContext context) {
+    final DateTime currentSelectedDate =
+        Provider.of<DateTimeProvider>(context).selectedDate;
+
     return CalendarCarousel<Event>(
       // headerTextStyle: Theme.of(context).textTheme.headlineLarge,
       todayBorderColor: Colors.transparent,
@@ -88,9 +93,10 @@ class _HomePageState extends State<HomePage> {
       daysTextStyle: Theme.of(context).textTheme.labelLarge,
       weekendTextStyle: Theme.of(context).textTheme.labelLarge,
       showWeekDays: false,
-      onDayPressed: (date, events) =>
-          setState(() => _currentSelectedDate = date),
-      selectedDateTime: _currentSelectedDate,
+      onDayPressed: (date, events) => setState(() =>
+          Provider.of<DateTimeProvider>(context, listen: false).selectedDate =
+              date),
+      selectedDateTime: currentSelectedDate,
       selectedDayButtonColor: Colors.transparent,
       selectedDayBorderColor: Colors.transparent,
       firstDayOfWeek: 1,
@@ -152,7 +158,9 @@ class _CalendarDayWidgetState extends State<CalendarDayWidget> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(DEFAULT_RADIUS),
         color: bg,
-        border: widget.isSelectedDay ? Border.all(color: Colors.grey.shade200) : null,
+        border: widget.isSelectedDay
+            ? Border.all(color: Colors.grey.shade200)
+            : null,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -177,12 +185,7 @@ class _CalendarDayWidgetState extends State<CalendarDayWidget> {
 }
 
 class QuickTodayStats extends StatefulWidget {
-  final DateTime currentSelectedDate;
-
-  const QuickTodayStats({
-    super.key,
-    required this.currentSelectedDate,
-  });
+  const QuickTodayStats({super.key});
 
   @override
   State<QuickTodayStats> createState() => _QuickTodayStatsState();
@@ -190,7 +193,6 @@ class QuickTodayStats extends StatefulWidget {
 
 class _QuickTodayStatsState extends State<QuickTodayStats> {
   bool loading = true;
-
   int numSmoked = 0;
   int maxSmokable = 0;
   Color textColor = Colors.transparent;
@@ -200,14 +202,29 @@ class _QuickTodayStatsState extends State<QuickTodayStats> {
   @override
   void initState() {
     super.initState();
-    initData();
+    // Listen to changes in the DateTimeProvider and refresh data accordingly
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<DateTimeProvider>(context, listen: false)
+          .addListener(initData);
+      initData();
+    });
+  }
+
+  @override
+  void dispose() {
+    // Remove listener when the widget is disposed
+    Provider.of<DateTimeProvider>(context, listen: false)
+        .removeListener(initData);
+    super.dispose();
   }
 
   Future<void> initData() async {
+    setState(() {
+      loading = true;
+    });
+
     await fetchData();
-
     getTextColor();
-
     buildWarning();
 
     setState(() {
@@ -216,7 +233,8 @@ class _QuickTodayStatsState extends State<QuickTodayStats> {
   }
 
   Future<void> fetchData() async {
-    DailyRecord data = (await getDailyRecord(widget.currentSelectedDate))!;
+    DailyRecord data = (await getDailyRecord(
+        Provider.of<DateTimeProvider>(context, listen: false).selectedDate))!;
 
     numSmoked = data.numCigarettesSmoked;
     maxSmokable = data.maxAllowedCigarettes;
@@ -227,7 +245,7 @@ class _QuickTodayStatsState extends State<QuickTodayStats> {
       warningText = "Hai raggiunto il limite di sigarette giornaliere";
       showWarning = true;
     } else if (numSmoked > maxSmokable) {
-      warningText = "Hai fumando troppo, limite superato";
+      warningText = "Hai fumato troppo, limite superato";
       showWarning = true;
     } else {
       warningText = "Stai fumando troppo velocemente, potresti sforare";
@@ -247,7 +265,7 @@ class _QuickTodayStatsState extends State<QuickTodayStats> {
 
   @override
   Widget build(BuildContext context) {
-    if (loading) return SizedBox();
+    if (loading) return const SizedBox();
 
     return Column(
       children: [
@@ -255,7 +273,7 @@ class _QuickTodayStatsState extends State<QuickTodayStats> {
           "Ecco le tue statistiche di oggi",
           style: Theme.of(context).textTheme.headlineSmall,
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -273,7 +291,7 @@ class _QuickTodayStatsState extends State<QuickTodayStats> {
           ],
         ),
         if (showWarning) ...[
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
             warningText,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -282,7 +300,7 @@ class _QuickTodayStatsState extends State<QuickTodayStats> {
                 ),
           ),
         ],
-        SizedBox(height: 30),
+        const SizedBox(height: 30),
       ],
     );
   }

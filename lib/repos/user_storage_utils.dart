@@ -30,9 +30,25 @@ Future<DailyRecord?> getDailyRecord(DateTime date) async {
   if (dailyMap.dailyRecords.containsKey(dayKey)) {
     daily = dailyMap.dailyRecords[dayKey]!;
   } else {
+    // Find the closest preceding date with a DailyRecord
+    DateTime? closestDate;
+    int maxCigarettes = mainInfo.currentMaxCigarettesPerDay;
+
+    for (String key in dailyMap.dailyRecords.keys) {
+      DateTime recordedDate = _parseDate(key) ;
+
+      if (recordedDate.isBefore(date)) {
+        if (closestDate == null || recordedDate.isAfter(closestDate)) {
+          closestDate = recordedDate;
+          maxCigarettes = dailyMap.dailyRecords[key]?.maxAllowedCigarettes ??
+              mainInfo.currentMaxCigarettesPerDay;
+        }
+      }
+    }
+
     daily = DailyRecord(
       date: date,
-      maxAllowedCigarettes: mainInfo.currentMaxCigarettesPerDay,
+      maxAllowedCigarettes: maxCigarettes,
     );
 
     await updateDailyRecord(daily);
@@ -43,6 +59,15 @@ Future<DailyRecord?> getDailyRecord(DateTime date) async {
 
 String getDailyRecordMapKey(DateTime date) {
   return "${date.day}-${date.month}-${date.year}";
+}
+
+// Function to parse date from key (assuming key is in "DD-MM-YYYY" format)
+DateTime _parseDate(String key) {
+  List<String> parts = key.split('-');
+  int day = int.parse(parts[0]);
+  int month = int.parse(parts[1]);
+  int year = int.parse(parts[2]);
+  return DateTime(year, month, day);
 }
 
 Future<bool> isFirstOpen() async {

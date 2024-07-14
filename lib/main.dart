@@ -4,13 +4,18 @@ import 'package:smoke_free/repos/UserStorage.dart';
 import 'package:smoke_free/repos/user_storage_utils.dart';
 import 'package:smoke_free/screens/HomePage/HomePage.dart';
 import 'package:smoke_free/screens/WelcomePage/WelcomePage.dart';
+import 'package:smoke_free/screens/WelcomePage/utils/DateTimeProvider.dart';
 import 'package:smoke_free/style/theme.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   await prepareApp();
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => DateTimeProvider(DateTime.now()),  
+    child: const MyApp(),
+  ));
 }
 
 Future<void> prepareApp() async {
@@ -26,7 +31,8 @@ Future<void> updateDBData() async {
 
     final keysDate = dailyMap.dailyRecords.keys
         .map((e) => DateFormat('dd-MM-yyyy').parse(e))
-        .toList()..sort();
+        .toList()
+      ..sort();
     final currKey = keysDate.where((e) => e.isAfter(DateTime.now())).first;
 
     final daily = dailyMap.dailyRecords[getDailyRecordMapKey(currKey)]!;
