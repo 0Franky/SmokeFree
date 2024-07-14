@@ -35,7 +35,7 @@ Future<DailyRecord?> getDailyRecord(DateTime date) async {
     int maxCigarettes = mainInfo.currentMaxCigarettesPerDay;
 
     for (String key in dailyMap.dailyRecords.keys) {
-      DateTime recordedDate = _parseDate(key) ;
+      DateTime recordedDate = _parseDate(key);
 
       if (recordedDate.isBefore(date)) {
         if (closestDate == null || recordedDate.isAfter(closestDate)) {
@@ -79,4 +79,13 @@ Future<void> updateDailyRecord(DailyRecord dailyRecord) async {
   String dayKey = getDailyRecordMapKey(dailyRecord.date);
   dailyMap.dailyRecords[dayKey] = dailyRecord;
   await UserStorage.save(DAILY_RECORD_MAP_ENTRY, dailyMap);
+}
+
+Future<void> incrementCigarettes({
+  required DateTime date,
+  int numberOfCigarettes = 1,
+}) async {
+  DailyRecord dailyRecord = (await getDailyRecord(date))!;
+  dailyRecord.numCigarettesSmoked++;
+  await updateDailyRecord(dailyRecord);
 }

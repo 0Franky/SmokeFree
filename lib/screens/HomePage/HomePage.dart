@@ -8,6 +8,7 @@ import 'package:smoke_free/models/store_data/DailyRecord.dart';
 import 'package:smoke_free/repos/UserStorage.dart';
 import 'package:smoke_free/repos/user_storage_utils.dart';
 import 'package:smoke_free/screens/Diary/Diary.dart';
+import 'package:smoke_free/screens/HomePage/modal/ActionModal.dart';
 import 'package:smoke_free/screens/WelcomePage/utils/DateTimeProvider.dart';
 import 'package:smoke_free/style/style.dart';
 import 'package:smoke_free/style/theme.dart';
@@ -59,6 +60,10 @@ class _HomePageState extends State<HomePage> {
                     CardButton(
                       icon: FontAwesomeIcons.plus,
                       text: "Aggiungi azione",
+                      onTap: () => showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) => ActionModal(),
+                      ),
                     ),
                     CardButton(
                       icon: FontAwesomeIcons.penToSquare,
