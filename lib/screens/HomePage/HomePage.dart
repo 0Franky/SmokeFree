@@ -24,8 +24,15 @@ void main() {
   );
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  DateTime _currentSelectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +40,13 @@ class HomePage extends StatelessWidget {
       appBar: APP_BAR(),
       body: ListView(
         children: [
-          SizedBox(height: 500, child: CustomCalendar(context: context)),
+          SizedBox(height: 500, child: _buildCalendar(context)),
           SizedBox(height: 30),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                QuickTodayStats(),
+                QuickTodayStats(currentSelectedDate: _currentSelectedDate),
                 Text(
                   "Come ti senti oggi?",
                   style: Theme.of(context).textTheme.headlineSmall,
@@ -53,9 +60,8 @@ class HomePage extends StatelessWidget {
                     CardButton(
                       icon: FontAwesomeIcons.penToSquare,
                       text: "Il mio diario",
-                      onTap: () => Get.to(() => DiaryPage(
-                          date: DateTime
-                              .now())), // TODO da camiare con data attuale
+                      onTap: () =>
+                          Get.to(() => DiaryPage(date: _currentSelectedDate)),
                     ),
                     CardButton(
                       icon: FontAwesomeIcons.crown,
@@ -70,25 +76,8 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-}
 
-class CustomCalendar extends StatefulWidget {
-  const CustomCalendar({
-    super.key,
-    required this.context,
-  });
-
-  final BuildContext context;
-
-  @override
-  State<CustomCalendar> createState() => _CustomCalendarState();
-}
-
-class _CustomCalendarState extends State<CustomCalendar> {
-  DateTime _currentSelectedDate = DateTime.now();
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildCalendar(BuildContext context) {
     return CalendarCarousel<Event>(
       // headerTextStyle: Theme.of(context).textTheme.headlineLarge,
       todayBorderColor: Colors.transparent,
@@ -102,6 +91,8 @@ class _CustomCalendarState extends State<CustomCalendar> {
       onDayPressed: (date, events) =>
           setState(() => _currentSelectedDate = date),
       selectedDateTime: _currentSelectedDate,
+      selectedDayButtonColor: Colors.transparent,
+      selectedDayBorderColor: Colors.transparent,
       firstDayOfWeek: 1,
       customDayBuilder: (
         bool isSelectable,
@@ -148,7 +139,7 @@ class _CalendarDayWidgetState extends State<CalendarDayWidget> {
   void initState() {
     super.initState();
 
-    bg = widget.isSelectedDay
+    bg = widget.isToday
         ? const Color.fromARGB(255, 0, 83, 119)
         : const Color.fromRGBO(5, 47, 95, 0.1);
 
@@ -161,7 +152,7 @@ class _CalendarDayWidgetState extends State<CalendarDayWidget> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(DEFAULT_RADIUS),
         color: bg,
-        border: widget.isToday ? Border.all(color: Colors.grey.shade200) : null,
+        border: widget.isSelectedDay ? Border.all(color: Colors.grey.shade200) : null,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -186,8 +177,11 @@ class _CalendarDayWidgetState extends State<CalendarDayWidget> {
 }
 
 class QuickTodayStats extends StatefulWidget {
+  final DateTime currentSelectedDate;
+
   const QuickTodayStats({
     super.key,
+    required this.currentSelectedDate,
   });
 
   @override
@@ -222,8 +216,7 @@ class _QuickTodayStatsState extends State<QuickTodayStats> {
   }
 
   Future<void> fetchData() async {
-    DailyRecord data = (await getDailyRecord(
-        DateTime.now()))!; // TODO da camiare con data attuale
+    DailyRecord data = (await getDailyRecord(widget.currentSelectedDate))!;
 
     numSmoked = data.numCigarettesSmoked;
     maxSmokable = data.maxAllowedCigarettes;
