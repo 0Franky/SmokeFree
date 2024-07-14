@@ -66,8 +66,9 @@ class _WelcomePageState extends State<WelcomePage> {
             Expanded(
                 child: PageView(
               controller: _pageController,
+              pageSnapping: false,
               onPageChanged: (index) {
-                setState(() {
+                setState(() { 
                   _currentPage = index;
                 });
               },
