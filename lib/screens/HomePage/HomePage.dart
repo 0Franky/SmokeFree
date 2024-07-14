@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
       appBar: APP_BAR(),
       body: ListView(
         children: [
-          SizedBox(height: 500, child: _buildCalendar(context)),
+          SizedBox(height: 500, child: CustomCalendar(context: context)),
           SizedBox(height: 30),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -70,8 +70,25 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+}
 
-  CalendarCarousel<Event> _buildCalendar(BuildContext context) {
+class CustomCalendar extends StatefulWidget {
+  const CustomCalendar({
+    super.key,
+    required this.context,
+  });
+
+  final BuildContext context;
+
+  @override
+  State<CustomCalendar> createState() => _CustomCalendarState();
+}
+
+class _CustomCalendarState extends State<CustomCalendar> {
+  DateTime _currentSelectedDate = DateTime.now();
+
+  @override
+  Widget build(BuildContext context) {
     return CalendarCarousel<Event>(
       // headerTextStyle: Theme.of(context).textTheme.headlineLarge,
       todayBorderColor: Colors.transparent,
@@ -82,9 +99,11 @@ class HomePage extends StatelessWidget {
       daysTextStyle: Theme.of(context).textTheme.labelLarge,
       weekendTextStyle: Theme.of(context).textTheme.labelLarge,
       showWeekDays: false,
+      onDayPressed: (date, events) =>
+          setState(() => _currentSelectedDate = date),
+      selectedDateTime: _currentSelectedDate,
       firstDayOfWeek: 1,
       customDayBuilder: (
-        /// you can provide your own build function to make custom day containers
         bool isSelectable,
         int index,
         bool isSelectedDay,
@@ -192,9 +211,9 @@ class _QuickTodayStatsState extends State<QuickTodayStats> {
 
   Future<void> initData() async {
     await fetchData();
-    
+
     getTextColor();
-    
+
     buildWarning();
 
     setState(() {
@@ -203,7 +222,8 @@ class _QuickTodayStatsState extends State<QuickTodayStats> {
   }
 
   Future<void> fetchData() async {
-    DailyRecord data = (await getDailyRecord(DateTime.now()))!; // TODO da camiare con data attuale
+    DailyRecord data = (await getDailyRecord(
+        DateTime.now()))!; // TODO da camiare con data attuale
 
     numSmoked = data.numCigarettesSmoked;
     maxSmokable = data.maxAllowedCigarettes;
